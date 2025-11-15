@@ -1,0 +1,63 @@
+## 📅 Day 16 - React Context API Setup: Building Todo App Foundation 
+
+
+Today I started building a **Todo application** using React Context API. This was homework, and I began by setting up the project structure and understanding how Context API works for state management across components.
+
+---
+
+### 🎯 Objective:
+
+- Set up a new Vite React project for Todo app
+- Understand React Context API for state management
+- Create the basic project structure with contexts folder
+- Build the foundation for todo management
+
+---
+
+### 🛠️ Project Setup:
+
+1. **Created React project with Vite:**
+   ```bash
+   npm create vite@latest 10toDoContextLocal -- --template react
+   cd 10toDoContextLocal
+   npm install
+   ```
+
+2. **Installed dependencies:**
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+3. **Project structure created:**
+   ```
+   src/
+     ├── App.jsx
+     ├── main.jsx  
+     ├── contexts/
+     │   └── toDoContext.js
+     └── components/
+         ├── TodoForm.jsx
+         └── TodoItem.jsx
+   ```
+
+---
+
+### 🧠 Context API Foundation:
+
+Started understanding how Context API works as an alternative to prop drilling for state management in React applications.
+
+---
+
+### ✅ Outcome:
+
+- Successfully set up the todo project structure
+- Prepared for implementing Context API for state management
+- Ready to build todo functionality in next session
+
+---
+
+📌 **Next Target:** Implement todo Context with state management and custom hooks.
+
+
+---
