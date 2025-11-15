@@ -1,0 +1,85 @@
+## 📅 Day 12 - Creating Mongoose Models & Understanding Schema Design (July 5, 2025)
+
+
+Today I explored how to define MongoDB document structure using **Mongoose schemas** and how to create reusable models. This was a crucial step to bring structure and validation into MongoDB operations, which otherwise stores documents with a flexible schema.
+
+---
+
+### 📘 Topics Covered:
+- Introduction to Schema in MongoDB using Mongoose
+- Creating schemas and defining field types
+- Adding validation rules like `required`, `default`, and `enum`
+- Creating and exporting models for use in Express routes
+
+---
+
+### 🛠️ Hands-On Implementation:
+
+Created a schema for a `User` model:
+
+```js
+// models/User.js
+const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    minlength: 3,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+  },
+}, { timestamps: true });
+
+module.exports = mongoose.model('User', userSchema);
+```
+
+Used the model inside a controller:
+
+```js
+const User = require('../models/User');
+
+const registerUser = async (req, res) => {
+  const { name, email, password } = req.body;
+  const newUser = new User({ name, email, password });
+
+  try {
+    await newUser.save();
+    res.status(201).json({ message: 'User created successfully' });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+```
+
+---
+
+### 🧠 Key Learnings:
+- Mongoose lets us enforce structure in MongoDB using schemas, making code more reliable and maintainable.
+- Validations like `required`, `unique`, and `enum` are handled automatically before saving to the database.
+- Schemas can be extended easily, and models are reusable throughout the project.
+
+---
+
+### ✅ Outcome:
+Successfully created a clean and reusable `User` model with validations. I now understand how to design schemas and interact with them through Express endpoints.
+
+---
+
+📌 **Up Next:** Setting up API routes for creating, reading, updating, and deleting (CRUD) documents using Mongoose.
+
+
+
+---
