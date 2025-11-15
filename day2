@@ -1,0 +1,155 @@
+### 📌 Topics Covered:
+MongoDB CRUD operations – insertOne, insertMany, find, findOne, deleteOne; running queries in Compass and shell
+
+### 💻 What I Did:
+Today I learned and practiced the core **CRUD operations** in MongoDB – **Create, Read, Update, and Delete** – which are fundamental for any database interaction. I used both **MongoDB Compass** and the **Mongo shell** to perform these operations, and it gave me a better understanding of how data is manipulated behind the scenes.
+
+
+final Summer training diary
+3 months ago
+Here's what I practiced:
+
+first commit
+4 months ago
+
+1. **Inserting a single document:**
+```js
+db.students.insertOne({
+  name: "Priya",
+  age: 22,
+  email: "priya@example.com",
+  course: "Full Stack"
+});
+```
+
+2. **Inserting multiple documents:**
+```js
+db.students.insertMany([
+  { name: "Ravi", age: 20, course: "React" },
+  { name: "Anjali", age: 23, course: "Node.js" }
+]);
+```
+
+3. **Finding documents:**
+```js
+db.students.find();  // Fetches all documents
+
+db.students.findOne({ name: "Priya" });  // Fetches first match only
+```
+
+4. **Using conditions in find queries:**
+```js
+db.students.find({ age: { $gt: 21 } });  // Students older than 21
+```
+
+5. **Deleting a document:**
+```js
+db.students.deleteOne({ name: "Ravi" });
+```
+
+
+final Summer training diary
+3 months ago
+I practiced writing queries in both Compass and the shell. While Compass is very beginner-friendly, writing queries manually in the shell gave me a more "developer-like" feel and improved my confidence.
+
+first commit
+4 months ago
+
+### 🧠 Reflections:
+
+final Summer training diary
+3 months ago
+Today's hands-on practice with CRUD operations helped me build a solid foundation in MongoDB. Understanding how to manipulate data efficiently is essential for building real-world apps. It was especially exciting to filter results using conditions like `$gt` (greater than) and to insert multiple documents at once. I'm now comfortable creating and managing data collections, and I'm ready to connect MongoDB to backend logic in the next sessions!
+
+first commit
+4 months ago
+
+
+
+---
+
+## Day 3 - 25 June 2025
+### 📌 Topics Covered:
+Using MongoDB with VS Code, Mongo shell commands, creating and running database scripts from .js files
+
+### 💻 What I Did:
+Today, I focused on running MongoDB directly from **VS Code** and using the **Mongo shell** more efficiently. I learned how to create `.js` files containing multiple MongoDB commands and execute them via the terminal or shell.
+
+To begin, I created a new JavaScript file called `script.js` in VS Code and added the following commands:
+```js
+db = connect("mongodb://localhost:27017/studentsDB");
+
+db.students.insertMany([
+  { name: "Neha", age: 24, course: "MongoDB" },
+  { name: "Arjun", age: 21, course: "Node.js" }
+]);
+
+printjson(db.students.findOne({ name: "Neha" }));
+```
+
+Then I ran it using the terminal:
+```bash
+mongo < script.js
+```
+
+This allowed me to **automate multiple operations** in one go, which is more efficient than typing them one by one in the shell. I also explored Mongo shell commands like `show dbs`, `use`, and `show collections`.
+
+In addition, I practiced writing queries with operators like `$lt`, `$gte`, and using logical queries:
+```js
+db.students.find({ age: { $gte: 21, $lte: 24 } });
+```
+
+VS Code provided a better development environment because of syntax highlighting and the ability to save/edit scripts easily.
+
+### 🧠 Reflections:
+Running MongoDB logic from a file felt like real programming. It made me realize how useful scripting is in development, especially for repetitive tasks or for database seeding. Learning to use the shell and VS Code together gave me more control and flexibility. I'm starting to enjoy working with databases, and I now understand why developers automate operations using scripts.
+
+
+---
+
+## Day 4 - 26 June 2025
+### 📌 Topics Covered:
+Advanced MongoDB Queries – Projections, Field Filtering, and Script Automation
+
+### 💻 What I Did:
+Today, I went deeper into MongoDB and explored **projections**, which allow us to control which fields are returned in the output of a query. Instead of getting all the data, we can include or exclude only the fields we care about.
+
+For example:
+```js
+// Show only 'name' and hide '_id'
+db.users.find({}, { name: 1, _id: 0 });
+```
+
+This is incredibly useful when we want to limit the amount of data transferred or focus on only relevant fields for UI display or analytics.
+
+---
+
+I also practiced **writing reusable MongoDB scripts** in `.js` files. Instead of typing one command at a time in the shell, I can now:
+- Store all the logic in a `.js` file
+- Run the whole script in one command using the shell
+
+Example:
+```js
+// mongoScript.js
+db = connect("mongodb://localhost:27017/library");
+
+db.books.insertMany([
+  { title: "Atomic Habits", author: "James Clear", price: 450 },
+  { title: "Ikigai", author: "Francesc Miralles", price: 299 }
+]);
+
+db.books.find({}, { title: 1, _id: 0 });
+```
+
+To execute it:
+```bash
+mongo < mongoScript.js
+```
+
+This helped me understand the importance of **batch operations** and how databases can be automated just like code.
+
+I also explored:
+- How to **filter** data based on multiple conditions
+- Using operators like `$or`, `$in`, `$lt`, `$gte` in combination
+
+Example:
