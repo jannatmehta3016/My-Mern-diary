@@ -1,0 +1,26 @@
+## 📅 Day 17 - React Context Implementation: TodoContext with Custom Hooks
+  Today I implemented the TodoContext with custom hooks for managing todo state throughout the application. This was the core homework where I learned how Context API provides a powerful alternative to prop drilling
+  Context Implementation:
+TodoContext with custom hooks (contexts/toDoContext.js):
+
+import { createContext, useContext } from "react";
+
+export const TodoContext = createContext({
+    todos: [
+        {
+            id: 1,
+            todo: "Todo msg",
+            completed: false,
+        }
+    ],
+    addTodo: (todo) => {},
+    updateTodo: (id, todo) => {},
+    deleteTodo: (id) => {},
+    toggleComplete: (id) => {}
+})
+
+export const useTodo = () => {
+    return useContext(TodoContext);
+}
+
+export const TodoProvider = TodoContext.Provider;.
