@@ -1,0 +1,74 @@
+## 📅 Day 14 - Exploring Middleware & Error Handling in Express
+  Today's focus was on understanding how **middleware** works in Express.js and how to implement **error handling** mechanisms effectively. Middleware is one of the most powerful features of Express, enabling request pre-processing, validation, authentication, and logging.
+
+---
+
+### 📘 Topics Covered:
+- What is middleware in Express?
+- Types of middleware: built-in, third-party, and custom
+- Using `express.json()` and `express.urlencoded()`
+- Creating custom middleware functions
+- Error-handling middleware
+- Order of middleware execution
+- Handling 404 Not Found errors and sending consistent error responses
+
+---
+
+### 🔁 Middleware Breakdown
+
+Learned how middleware functions are executed in order and can either pass control to the next middleware or end the request.
+
+```js
+// Built-in middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Custom middleware
+app.use((req, res, next) => {
+  console.log(`${req.method} request received at ${req.url}`);
+  next(); // Passes control to the next middleware
+});
+```
+
+### ❌ Error-Handling Middleware
+
+Used a separate function at the end of all routes to handle unexpected errors and send consistent error responses.
+
+```js
+// Error-handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err.message);
+  res.status(500).json({ error: 'Something went wrong', message: err.message });
+});
+```
+
+Also added a generic 404 handler for unmatched routes:
+
+```js
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+```
+
+---
+
+### 🧠 Key Learnings:
+- Middleware is just a function that has access to `req`, `res`, and `next()`.
+- `express.json()` is needed to parse incoming JSON payloads (especially for POST requests).
+- Custom middleware allows us to apply logic like authentication, logging, or rate limiting.
+- Placing error-handling middleware at the end ensures proper fallback for unhandled exceptions.
+- Order of middleware is critical — the request flows top to bottom.
+
+---
+
+### ✅ Outcome:
+Now I understand how Express apps are structured using layers of middleware and how to handle both expected and unexpected errors gracefully. This makes applications more maintainable and debuggable.
+
+---
+
+📌 **Up Next:** Integrating authentication using JWTs and protecting routes with middleware.
+
+
+
+---
+
