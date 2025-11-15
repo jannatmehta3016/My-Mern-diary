@@ -1,0 +1,221 @@
+MegaBlog: Appwrite CRUD Operations & Database Setup 
+  Today I focused on implementing CRUD operations for the MegaBlog project using Appwrite as the backend service. This included setting up the database service, creating post management functionality, and building the core components for blog post operations
+    Set up Appwrite database service for blog posts
+Implement full CRUD operations (Create, Read, Update, Delete)
+Create post management components
+Build file upload functionality with Appwrite Storage
+Test all CRUD operations with proper error handling.
+    Appwrite Database Service:
+Database Service Configuration (src/appwrite/config.js):
+import { Client, ID, Databases, Storage, Query } from "appwrite";
+
+export class Service {
+    client = new Client();
+    databases;
+    bucket;
+
+    constructor() {
+        this.client
+            .setEndpoint(import.meta.env.VITE_APPWRITE_URL)
+            .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID);
+        this.databases = new Databases(this.client);
+        this.bucket = new Storage(this.client);
+    }
+
+    async createPost({ title, slug, content, featuredImage, status, userId }) {
+        try {
+            return await this.databases.createDocument(
+                import.meta.env.VITE_APPWRITE_DATABASE_ID,
+                import.meta.env.VITE_APPWRITE_COLLECTION_ID,
+                slug,
+                {
+                    title,
+                    content,
+                    featuredImage,
+                    status,
+                    userId,
+                }
+            );
+        } catch (error) {
+            console.log("Appwrite service :: createPost :: error", error);
+        }
+    }
+
+    async updatePost(slug, { title, content, featuredImage, status }) {
+        try {
+            return await this.databases.updateDocument(
+                import.meta.env.VITE_APPWRITE_DATABASE_ID,
+                import.meta.env.VITE_APPWRITE_COLLECTION_ID,
+                slug,
+                {
+                    title,
+                    content,
+                    featuredImage,
+                    status,
+                }
+            );
+        } catch (error) {
+            console.log("Appwrite service :: updatePost :: error", error);
+        }
+    }
+
+    async deletePost(slug) {
+        try {
+            await this.databases.deleteDocument(
+                import.meta.env.VITE_APPWRITE_DATABASE_ID,
+                import.meta.env.VITE_APPWRITE_COLLECTION_ID,
+                slug
+            );
+            return true;
+        } catch (error) {
+            console.log("Appwrite service :: deletePost :: error", error);
+            return false;
+        }
+    }
+
+    async getPost(slug) {
+        try {
+            return await this.databases.getDocument(
+                import.meta.env.VITE_APPWRITE_DATABASE_ID,
+                import.meta.env.VITE_APPWRITE_COLLECTION_ID,
+                slug
+            );
+        } catch (error) {
+            console.log("Appwrite service :: getPost :: error", error);
+            return false;
+        }
+    }
+
+    async getPosts(queries = [Query.equal("status", "active")]) {
+        try {
+            return await this.databases.listDocuments(
+                import.meta.env.VITE_APPWRITE_DATABASE_ID,
+                import.meta.env.VITE_APPWRITE_COLLECTION_ID,
+                queries
+            );
+        } catch (error) {
+            console.log("Appwrite service :: getPosts :: error", error);
+            return false;
+        }
+    }
+
+    // File upload service
+    async uploadFile(file) {
+        try {
+            return await this.bucket.createFile(
+                import.meta.env.VITE_APPWRITE_BUCKET_ID,
+                ID.unique(),
+                file
+            );
+        } catch (error) {
+            console.log("Appwrite service :: uploadFile :: error", error);
+            return false;
+        }
+    }
+
+    async deleteFile(fileId) {
+        try {
+            await this.bucket.deleteFile(
+                import.meta.env.VITE_APPWRITE_BUCKET_ID,
+                fileId
+            );
+            return true;
+        } catch (error) {
+            console.log("Appwrite service :: deleteFile :: error", error);
+            return false;
+        }
+    }
+
+    getFilePreview(fileId) {
+        return this.bucket.getFilePreview(
+            import.meta.env.VITE_APPWRITE_BUCKET_ID,
+            fileId
+        );
+    }
+}
+
+const service = new Service();
+export default service;
+📝 Post Management Components:
+PostCard Component:
+
+import React from 'react';
+import appwriteService from '../appwrite/config';
+import { Link } from 'react-router-dom';
+
+function PostCard({ $id, title, featuredImage }) {
+    return (
+        <Link to={`/post/${$id}`}>
+            <div className='w-full bg-gray-100 rounded-xl p-4'>
+                <div className='w-full justify-center mb-4'>
+                    <img 
+                        src={appwriteService.getFilePreview(featuredImage)} 
+                        alt={title}
+                        className='rounded-xl' 
+                    />
+                </div>
+                <h2 className='text-xl font-bold'>{title}</h2>
+            </div>
+        </Link>
+    );
+}
+
+export default PostCard;
+Home Page with Posts:
+
+import React, { useEffect, useState } from 'react';
+import appwriteService from '../appwrite/config';
+import { PostCard } from '../components';
+
+function Home() {
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        appwriteService.getPosts().then((posts) => {
+            if (posts) {
+                setPosts(posts.documents);
+            }
+        });
+    }, []);
+
+    if (posts.length === 0) {
+        return (
+            <div className="w-full py-8 mt-4 text-center">
+                <div className="flex flex-wrap">
+                    <div className="p-2 w-full">
+                        <h1 className="text-2xl font-bold hover:text-gray-500">
+                            Login to read posts
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    
+    return (
+        <div className='w-full py-8'>
+            <div className='flex flex-wrap'>
+                {posts.map((post) => (
+                    <div key={post.$id} className='p-2 w-1/4'>
+                        <PostCard {...post} />
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+export default Home;
+🧠 What I Learned:
+Appwrite Database provides real-time NoSQL database with automatic scaling
+CRUD operations through Appwrite SDK simplify data management without writing backend APIs
+Query building with Appwrite allows complex data filtering and pagination
+Collection permissions ensure proper data security and access control
+Document structure design affects application performance and scalability
+✅ Outcome:
+Set up Appwrite project with database collections and permissions
+Implemented complete database service with CRUD operations
+Created blog post collection with proper document structure
+Built efficient query methods for data retrieval and filtering
+Established foundation for MegaBlog application backend
+📌 Next Target: Implement user authentication with signup/login functionality and create an admin dashboard.
