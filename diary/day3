@@ -1,0 +1,37 @@
+### 📌 Topics Covered:
+Using MongoDB with VS Code, Mongo shell commands, creating and running database scripts from .js files
+
+### 💻 What I Did:
+Today, I focused on running MongoDB directly from **VS Code** and using the **Mongo shell** more efficiently. I learned how to create `.js` files containing multiple MongoDB commands and execute them via the terminal or shell.
+
+To begin, I created a new JavaScript file called `script.js` in VS Code and added the following commands:
+```js
+db = connect("mongodb://localhost:27017/studentsDB");
+
+db.students.insertMany([
+  { name: "Neha", age: 24, course: "MongoDB" },
+  { name: "Arjun", age: 21, course: "Node.js" }
+]);
+
+printjson(db.students.findOne({ name: "Neha" }));
+```
+
+Then I ran it using the terminal:
+```bash
+mongo < script.js
+```
+
+This allowed me to **automate multiple operations** in one go, which is more efficient than typing them one by one in the shell. I also explored Mongo shell commands like `show dbs`, `use`, and `show collections`.
+
+In addition, I practiced writing queries with operators like `$lt`, `$gte`, and using logical queries:
+```js
+db.students.find({ age: { $gte: 21, $lte: 24 } });
+```
+
+VS Code provided a better development environment because of syntax highlighting and the ability to save/edit scripts easily.
+
+### 🧠 Reflections:
+Running MongoDB logic from a file felt like real programming. It made me realize how useful scripting is in development, especially for repetitive tasks or for database seeding. Learning to use the shell and VS Code together gave me more control and flexibility. I'm starting to enjoy working with databases, and I now understand why developers automate operations using scripts.
+
+
+---
