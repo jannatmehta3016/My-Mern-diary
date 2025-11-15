@@ -1,0 +1,74 @@
+### 📌 Topics Covered:
+Exploring Middleware, Route Parameters, and Modular Routing in Express.js
+
+### 💻 What I Did:
+  Today's session was packed with new Express.js features that make the backend more powerful and structured. I started by diving deeper into **middleware**, which acts as a bridge between the request and response cycle.
+
+
+
+
+### 🧱 Custom Middleware:
+I wrote a custom middleware to log request information:
+```js
+app.use((req, res, next) => {
+  console.log(`${req.method} request received at ${req.url}`);
+  next(); // continue to the route handler
+});
+```
+
+This really helped me understand how requests pass through layers before reaching the final route handler. It also made debugging and tracking much easier.
+
+---
+
+### 📦 Route Parameters:
+I also explored **dynamic routing** using route parameters. Here's what I implemented:
+```js
+app.get('/users/:id', (req, res) => {
+  const userId = req.params.id;
+  res.send(`User ID is ${userId}`);
+});
+```
+
+This allowed me to fetch the dynamic `id` from the URL (e.g., `/users/101`) and use it in logic. Route parameters will be super helpful when building REST APIs with unique identifiers for users, products, posts, etc.
+
+---
+
+### 📁 Modular Routing:
+As applications grow, routing can get messy in one file. I learned how to create **separate route modules** for cleaner code:
+#### `routes/student.js`:
+```js
+const express = require('express');
+const router = express.Router();
+
+router.get('/', (req, res) => {
+  res.send('All students');
+});
+
+router.get('/:id', (req, res) => {
+  res.send(`Student ID: ${req.params.id}`);
+});
+
+module.exports = router;
+```
+#### `server.js`:
+```js
+const express = require('express');
+const app = express();
+const studentRoutes = require('./routes/student');
+
+app.use('/students', studentRoutes);
+```
+
+This gave my app a professional structure and made it easy to maintain multiple routes across different files.
+
+---
+
+### 🧠 Reflections:
+Understanding how to structure large apps and use features like middleware and modular routing is a game-changer. It felt like I went from writing a simple script to designing an actual backend system.
+
+I'm starting to see how Express can scale — whether for small projects or production-grade systems. These practices will definitely help me as I continue building the backend for MERN stack apps.
+
+
+
+---
+
