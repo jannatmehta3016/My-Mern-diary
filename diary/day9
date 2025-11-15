@@ -1,0 +1,85 @@
+### 📌 Topics Covered:
+Multer for File Uploads, Handling Multipart Forms, and Basic Image Storage
+
+### 💻 What I Did:
+Today was all about enabling file uploads in my Node.js backend using the powerful middleware library **Multer**. I learned how to accept files like images and PDFs through API routes and store them on the local server.
+
+---
+
+### 📦 Installing Multer:
+First, I installed Multer:
+```bash
+npm install multer
+```
+
+Then configured it in my server:
+```js
+import multer from 'multer';
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
+```
+
+This allowed me to control **where** and **how** files are stored.
+
+---
+
+### 📤 Creating a File Upload Route:
+I created a POST route to handle image uploads:
+```js
+app.post('/upload', upload.single('image'), (req, res) => {
+  console.log(req.file);  // Access uploaded file info
+  res.send('File uploaded successfully!');
+});
+```
+
+Used `upload.single('image')` for single file and `upload.array('photos', 5)` for multiple uploads.
+
+---
+
+### 🧪 Testing:
+I tested the route using **Postman**:
+- Method: `POST`
+- URL: `http://localhost:5000/upload`
+- Body: `form-data` with `key = image`, type = file
+
+It worked! The image was saved in the `/uploads` folder.
+
+---
+
+### 🔐 Validating File Type:
+To enhance security, I added file type checks:
+```js
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed!'), false);
+  }
+};
+
+const upload = multer({ storage, fileFilter });
+```
+
+---
+
+### 🧠 Reflections:
+Before today, file uploads always seemed complex. But with Multer, it feels straightforward and reliable. I now understand how form-data is handled on the backend and how to store files in a structured, secure way.
+
+This opens the door for future features like profile pictures, product galleries, and document uploads in full-stack apps.
+
+---
+
+✅ **Next Goal:** Start building authentication using **JWT (JSON Web Tokens)** for login-protected routes.
+
+
+
+---
