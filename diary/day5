@@ -1,0 +1,67 @@
+### 📌 Topics Covered:
+Setting Up Express.js – Building REST APIs and Handling Requests
+
+### 💻 What I Did:
+Today, I shifted focus to **Express.js**, the most popular web framework built on top of Node.js. I learned how to set up a basic Express application and how to run it locally using `node` or `nodemon`.
+
+My first goal was to understand how to create a basic server. I wrote this simple code to get started:
+```js
+const express = require('express');
+const app = express();
+const port = 3000;
+
+app.get('/', (req, res) => {
+  res.send('Hello from Express!');
+});
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
+```
+
+Running this script in the terminal served my app on `http://localhost:3000`, and visiting that in the browser showed the welcome message. This was the first time I saw my Node.js code respond through a browser — an exciting moment!
+
+---
+
+### 🌐 Handling Different Request Types:
+I also explored different HTTP methods and how to handle them:
+- `GET` – fetch data
+- `POST` – send new data
+- `PUT/PATCH` – update existing data
+- `DELETE` – remove data
+  Here's an example I created to handle both GET and POST:
+  ```js
+app.get('/students', (req, res) => {
+  res.send('List of all students');
+});
+
+app.post('/students', (req, res) => {
+  res.send('New student added');
+});
+```
+
+To test these routes, I used [Postman](https://www.postman.com/) — a handy tool for testing APIs — and confirmed that the routes work as expected.
+
+---
+
+### 📦 Body Parser and Middleware:
+I learned that Express can use **middleware** to modify request/response behavior. One common example is parsing JSON body data from `POST` requests:
+```js
+app.use(express.json());
+```
+
+This line lets me read data sent in the body like:
+```json
+{
+  "name": "Riya",
+  "age": 22
+}
+```
+
+---
+
+### 🧠 Reflections:
+Today gave me a practical understanding of how backend APIs work. I began to think in terms of **routes**, **methods**, and **responses**, and realized how essential Express is in building the logic layer of web apps. It's lightweight, flexible, and easy to start with — which makes it perfect for scaling from a small test API to a production-ready backend.
+
+
+---
