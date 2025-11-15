@@ -1,0 +1,90 @@
+## 📅 Day 15 - Implementing JWT Authentication in Express
+
+
+
+
+Today's goal was to learn how to **secure Express routes using JWT (JSON Web Token)**. This involved understanding token creation, verification, and using middleware to protect API endpoints.
+
+---
+
+### 🔐 What is JWT?
+
+
+final Summer training diary
+JWT stands for **JSON Web Token** – a compact, URL-safe token used for securely transmitting information between parties as a JSON object. It's commonly used for authentication in RESTful APIs.
+4 months ago
+
+first commit
+
+---
+
+### 🛠️ Tools Used:
+- `jsonwebtoken` package
+- `dotenv` for environment variables
+- Express middleware to protect routes
+
+---
+
+### 🧪 Steps Practiced:
+
+1. **Installing JWT package:**
+   ```bash
+   npm install jsonwebtoken dotenv
+   ```
+
+2. **Generating a JWT token:**
+   ```js
+   const jwt = require('jsonwebtoken');
+   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+   ```
+
+3. **Sending the token to the client upon login:**
+   ```js
+   res.json({ token });
+   ```
+
+4. **Creating middleware to verify token:**
+   ```js
+   const verifyToken = (req, res, next) => {
+     const authHeader = req.headers.authorization;
+     const token = authHeader && authHeader.split(' ')[1];
+
+     if (!token) return res.sendStatus(401);
+
+     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+       if (err) return res.sendStatus(403);
+       req.user = user;
+       next();
+     });
+   };
+   ```
+
+5. **Protecting routes using this middleware:**
+   ```js
+   app.get('/dashboard', verifyToken, (req, res) => {
+     res.json({ message: "Welcome to the dashboard!", user: req.user });
+   });
+   ```
+
+---
+
+### 🔑 Key Learnings:
+
+- JWTs are a stateless way to implement authentication, which works well with REST APIs.
+- Tokens are signed with a secret and include a payload (user info), a header, and a signature.
+- Authentication middleware ensures only authorized users can access protected routes.
+- Environment variables (`.env`) are used to store sensitive info like the `JWT_SECRET`.
+- Best practice is to include tokens in the `Authorization` header using the "Bearer" scheme.
+
+---
+
+### ✅ Outcome:
+
+I can now implement a basic authentication system in Node.js using JWT. I learned how to protect routes and verify tokens, making the API more secure.
+
+---
+
+📌 **Next Target:** Connect this JWT auth system with the frontend (React) to build a complete login-protected flow.
+
+
+---
