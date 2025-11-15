@@ -1,0 +1,26 @@
+MegaBlog Project Setup: React + Appwrite + Redux Toolkit 
+  Today's focus was building a secure user authentication system using JWT (JSON Web Tokens) with Express and MongoDB. I implemented both signup and login routes, handling password encryption with bcrypt and token generation with jsonwebtoken
+  Set up React project with Vite and Tailwind CSS
+Configure Appwrite backend service for authentication and database
+Implement Redux Toolkit for global state management
+Create authentication service and user management.
+  Project Setup:
+Created React Project with Vite:
+
+npm create vite@latest megablog -- --template react
+cd megablog
+npm install
+  Installed Required Dependencies:
+
+npm install @reduxjs/toolkit react-redux react-router-dom appwrite
+npm install @tinymce/tinymce-react html-react-parser react-hook-form
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+  Configured Tailwind CSS:
+
+// tailwind.config.js
+module.exports = {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: { extend: {} },
+  plugins: [],
+}
