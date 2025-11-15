@@ -1,0 +1,58 @@
+MongoDB CRUD operations – insertOne, insertMany, find, findOne, deleteOne; running queries in Compass and shell
+
+### 💻 What I Did:
+Today I learned and practiced the core **CRUD operations** in MongoDB – **Create, Read, Update, and Delete** – which are fundamental for any database interaction. I used both **MongoDB Compass** and the **Mongo shell** to perform these operations, and it gave me a better understanding of how data is manipulated behind the scenes.
+
+
+
+Here's what I practiced:
+
+
+
+1. **Inserting a single document:**
+```js
+db.students.insertOne({
+  name: "Priya",
+  age: 22,
+  email: "priya@example.com",
+  course: "Full Stack"
+});
+```
+
+2. **Inserting multiple documents:**
+```js
+db.students.insertMany([
+  { name: "Ravi", age: 20, course: "React" },
+  { name: "Anjali", age: 23, course: "Node.js" }
+]);
+```
+
+3. **Finding documents:**
+```js
+db.students.find();  // Fetches all documents
+
+db.students.findOne({ name: "Priya" });  // Fetches first match only
+```
+
+4. **Using conditions in find queries:**
+```js
+db.students.find({ age: { $gt: 21 } });  // Students older than 21
+```
+
+5. **Deleting a document:**
+```js
+db.students.deleteOne({ name: "Ravi" });
+```
+
+
+
+I practiced writing queries in both Compass and the shell. While Compass is very beginner-friendly, writing queries manually in the shell gave me a more "developer-like" feel and improved my confidence.
+
+
+
+
+### 🧠 Reflections:
+
+
+Today's hands-on practice with CRUD operations helped me build a solid foundation in MongoDB. Understanding how to manipulate data efficiently is essential for building real-world apps. It was especially exciting to filter results using conditions like `$gt` (greater than) and to insert multiple documents at once. I'm now comfortable creating and managing data collections, and I'm ready to connect MongoDB to backend logic in the next sessions!
+
