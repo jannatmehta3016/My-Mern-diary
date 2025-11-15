@@ -1,0 +1,61 @@
+Advanced MongoDB Queries – Projections, Field Filtering, and Script Automation
+
+### 💻 What I Did:
+Today, I went deeper into MongoDB and explored **projections**, which allow us to control which fields are returned in the output of a query. Instead of getting all the data, we can include or exclude only the fields we care about.
+
+For example:
+```js
+// Show only 'name' and hide '_id'
+db.users.find({}, { name: 1, _id: 0 });
+```
+
+This is incredibly useful when we want to limit the amount of data transferred or focus on only relevant fields for UI display or analytics.
+
+---
+
+I also practiced **writing reusable MongoDB scripts** in `.js` files. Instead of typing one command at a time in the shell, I can now:
+- Store all the logic in a `.js` file
+- Run the whole script in one command using the shell
+
+Example:
+```js
+// mongoScript.js
+db = connect("mongodb://localhost:27017/library");
+
+db.books.insertMany([
+  { title: "Atomic Habits", author: "James Clear", price: 450 },
+  { title: "Ikigai", author: "Francesc Miralles", price: 299 }
+]);
+
+db.books.find({}, { title: 1, _id: 0 });
+```
+
+To execute it:
+```bash
+mongo < mongoScript.js
+```
+
+This helped me understand the importance of **batch operations** and how databases can be automated just like code.
+
+I also explored:
+- How to **filter** data based on multiple conditions
+- Using operators like `$or`, `$in`, `$lt`, `$gte` in combination
+
+Example:
+```js
+db.books.find({
+  $or: [
+    { price: { $lt: 300 } },
+    { author: "James Clear" }
+  ]
+});
+```
+
+---
+
+### 🧠 Reflections:
+Learning about projections made it clearer how to work with data efficiently. I realized that it's not always about storing or retrieving everything — sometimes it's about getting just enough. Also, writing Mongo scripts helped me see MongoDB more like a programming tool rather than just a query terminal. This feels like a powerful way to prepare for real-world applications, especially when working with APIs or backend logic.
+
+
+
+---
