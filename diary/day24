@@ -1,0 +1,227 @@
+MegaBlog: User Authentication & Login System 
+  Today I focused on implementing complete user authentication system for the MegaBlog project using Appwrite's authentication service. This included building login/signup components, integrating with Redux store, and creating protected routes
+  Build complete user authentication system with signup and login
+Create authentication components with form validation
+Integrate authentication state with Redux store
+Implement protected routes and user session management
+Build responsive authentication UI with proper error handling.
+  Authentication Service Enhancement:
+   Authentication Components:
+Login Component (src/components/Login.jsx):
+
+import React, {useState} from 'react'
+import {Link, useNavigate} from 'react-router-dom'
+import { login as authLogin } from '../store/authSlice'
+import {Button, Input, Logo} from "./index"
+import {useDispatch} from "react-redux"
+import authService from "../appwrite/auth"
+import {useForm} from "react-hook-form"
+
+function Login() {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const {register, handleSubmit} = useForm()
+    const [error, setError] = useState("")
+
+    const login = async(data) => {
+        setError("")
+        try {
+            const session = await authService.login(data)
+            if (session) {
+                const userData = await authService.getCurrentUser()
+                if(userData) dispatch(authLogin({userData}));
+                navigate("/")
+            }
+        } catch (error) {
+            setError(error.message)
+        }
+    }
+
+    return (
+        <div className='flex items-center justify-center w-full'>
+            <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
+                <div className="mb-2 flex justify-center">
+                    <span className="inline-block w-full max-w-[100px]">
+                        <Logo width="100%" />
+                    </span>
+                </div>
+                <h2 className="text-center text-2xl font-bold leading-tight">Sign in to your account</h2>
+                <p className="mt-2 text-center text-base text-black/60">
+                    Don&apos;t have any account?&nbsp;
+                    <Link
+                        to="/signup"
+                        className="font-medium text-primary transition-all duration-200 hover:underline"
+                    >
+                        Sign Up
+                    </Link>
+                </p>
+                {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+                <form onSubmit={handleSubmit(login)} className='mt-8'>
+                    <div className='space-y-5'>
+                        <Input
+                            label="Email: "
+                            placeholder="Enter your email"
+                            type="email"
+                            {...register("email", {
+                                required: true,
+                                validate: {
+                                    matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                                    "Email address must be a valid address",
+                                }
+                            })}
+                        />
+                        <Input
+                            label="Password: "
+                            type="password"
+                            placeholder="Enter your password"
+                            {...register("password", {
+                                required: true,
+                            })}
+                        />
+                        <Button
+                            type="submit"
+                            className="w-full"
+                        >Sign in</Button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    )
+}
+
+export default Login
+Signup Component (src/components/Signup.jsx):
+
+import React, {useState} from 'react'
+import authService from '../appwrite/auth'
+import {Link ,useNavigate} from 'react-router-dom'
+import {login} from '../store/authSlice'
+import {Button, Input, Logo} from './index.js'
+import {useDispatch} from 'react-redux'
+import {useForm} from 'react-hook-form'
+
+function Signup() {
+    const navigate = useNavigate()
+    const [error, setError] = useState("")
+    const dispatch = useDispatch()
+    const {register, handleSubmit} = useForm()
+
+    const create = async(data) => {
+        setError("")
+        try {
+            const userData = await authService.createAccount(data)
+            if (userData) {
+                const currentUser = await authService.getCurrentUser()
+                if(currentUser) dispatch(login(currentUser));
+                navigate("/")
+            }
+        } catch (error) {
+            setError(error.message)
+        }
+    }
+
+    return (
+        <div className="flex items-center justify-center">
+            <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
+                <div className="mb-2 flex justify-center">
+                    <span className="inline-block w-full max-w-[100px]">
+                        <Logo width="100%" />
+                    </span>
+                </div>
+                <h2 className="text-center text-2xl font-bold leading-tight">Sign up to create account</h2>
+                <p className="mt-2 text-center text-base text-black/60">
+                    Already have an account?&nbsp;
+                    <Link
+                        to="/login"
+                        className="font-medium text-primary transition-all duration-200 hover:underline"
+                    >
+                        Sign In
+                    </Link>
+                </p>
+                {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+
+                <form onSubmit={handleSubmit(create)}>
+                    <div className='space-y-5'>
+                        <Input
+                            label="Full Name: "
+                            placeholder="Enter your full name"
+                            {...register("name", {
+                                required: true,
+                            })}
+                        />
+                        <Input
+                            label="Email: "
+                            placeholder="Enter your email"
+                            type="email"
+                            {...register("email", {
+                                required: true,
+                                validate: {
+                                    matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                                    "Email address must be a valid address",
+                                }
+                            })}
+                        />
+                        <Input
+                            label="Password: "
+                            type="password"
+                            placeholder="Enter your password"
+                            {...register("password", {
+                                required: true,
+                            })}
+                        />
+                        <Button type="submit" className="w-full">
+                            Create Account
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    )
+}
+
+export default Signup
+🛡️ Protected Routes & Authentication Layout:
+AuthLayout Component:
+import React, {useEffect, useState} from 'react'
+import {useSelector} from 'react-redux'
+import {useNavigate} from 'react-router-dom'
+
+export default function Protected({children, authentication = true}) {
+    const navigate = useNavigate()
+    const [loader, setLoader] = useState(true)
+    const authStatus = useSelector(state => state.auth.status)
+
+    useEffect(() => {
+        if(authentication && authStatus !== authentication){
+            navigate("/login")
+        } else if(!authentication && authStatus !== authentication){
+            navigate("/")
+        }
+        setLoader(false)
+    }, [authStatus, navigate, authentication])
+
+    return loader ? <h1>Loading...</h1> : <>{children}</>
+}
+🧠 What I Learned:
+Appwrite Authentication provides secure user management with built-in session handling
+Redux state management maintains authentication status across the application
+React Hook Form simplifies form validation and submission with minimal re-renders
+Protected routing ensures secure access to authenticated areas
+Session management maintains user state between page refreshes
+Form validation with regex patterns ensures data integrity
+Error handling provides user feedback for authentication failures
+🔧 Key Implementation Details:
+Used useForm hook for efficient form handling and validation
+Implemented client-side email validation with regex patterns
+Created reusable AuthLayout component for route protection
+Integrated authentication state with Redux for global access
+Added proper error handling and user feedback
+Implemented navigation flow between login and signup pages
+✅ Outcome:
+Successfully implemented complete authentication system with signup and login
+Created secure session management with Appwrite backend
+Built responsive authentication forms with comprehensive validation
+Integrated authentication state with Redux store for global state management
+Established foundation for protected routes and user-specific content
+Ready to build dashboard and post management features
+📌 Next Target: Build admin dashboard with post management and user interface.
